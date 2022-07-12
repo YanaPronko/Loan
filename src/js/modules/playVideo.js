@@ -19,7 +19,7 @@ export default class VideoPlayer {
   }
 
   bindCloseBtn() {
-    this.closeBtn.addEventListener("click", ()=>{
+    this.closeBtn.addEventListener("click", () => {
       this.player.stopVideo();
       this.overlay.style.display = "none";
     });
@@ -29,15 +29,15 @@ export default class VideoPlayer {
     this.btns.forEach((btn, i) => {
       try {
         const blockedElem = btn.closest(".module__video-item").nextElementSibling;
-        if (i % 2) {
+        if (i % 2 === 0) {
           blockedElem.setAttribute("data-disabled", "true");
         }
-      }catch(e){}
+      } catch (e) { }
 
-      if (!btn.closest(".module__video-item") || btn.closest(".module__video-item").getAttribute("data-disabled") !== "true") {
-        btn.addEventListener("click", () => {
+      
+      btn.addEventListener("click", () => {
+        if (!btn.closest(".module__video-item") || btn.closest(".module__video-item").getAttribute('data-disabled') !== 'true') {
           this.activeBtn = btn;
-
           if (document.querySelector("iframe#frame")) {
             this.overlay.style.display = "flex";
             if (this.path !== btn.getAttribute("data-url")) {
@@ -48,8 +48,8 @@ export default class VideoPlayer {
             this.path = btn.getAttribute("data-url");
             this.createPlayer(this.path);
           }
-        });
-      }
+        }
+      });
     });
   }
 
@@ -58,13 +58,13 @@ export default class VideoPlayer {
       const blockedElem = this.activeBtn.closest(".module__video-item").nextElementSibling;
       const playBtn = this.activeBtn.querySelector("svg").cloneNode(true);
 
-      if (state == 0) {
+      if (state.data === 0) {
         if (blockedElem.querySelector(".play__circle").classList.contains("closed")) {
           blockedElem.querySelector(".play__circle").classList.remove("closed");
           blockedElem.querySelector("svg").remove();
           blockedElem.querySelector(".play__circle").append(playBtn);
-          blockedElem.querySelector("play__text").textContent = "play video";
-          blockedElem.querySelector("play__text").classList.remove("attention");
+          blockedElem.querySelector(".play__text").textContent = "play video";
+          blockedElem.querySelector(".play__text").classList.remove("attention");
           blockedElem.style.opacity = "1";
           blockedElem.style.filter = "none";
 
@@ -75,12 +75,14 @@ export default class VideoPlayer {
   }
 
   init() {
-    const tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    const firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    if (this.btns.length > 0) {
+      const tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-    this.bindTriggers();
-    this.bindCloseBtn();
+      this.bindTriggers();
+      this.bindCloseBtn();
+    }
   }
 }

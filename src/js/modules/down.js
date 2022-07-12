@@ -1,26 +1,36 @@
-export default class Down {
-  constuctor(selector) {
+export default class Download {
+  constructor(selector) {
     this.bts = document.querySelectorAll(selector);
     this.path = "assets/img/mainbg.jpg";
   }
 
   downloadFile(path) {
-    // e.preventDefault();
     const link = document.createElement("a");
     link.setAttribute("href", path);
     link.setAttribute("download", "picture");
+    link.classList.add("link");
     link.style.display = "none";
+    /* link.addEventListener("click", (e) => {
+      e.preventDefault();
+     
+    }); */
     document.body.append(link);
+    /* document.querySelector(".link").addEventListener("clik", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    }); */
     link.click();
-    // document.body.remove(link);
+    link.remove();
   }
 
   init() {
-    console.log(this.bts);
     this.bts.forEach(btn => {
-      btn.addEventListener("click", () => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         this.downloadFile(this.path);
       });
     });  
   }
 }
+
